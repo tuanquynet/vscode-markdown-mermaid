@@ -1,10 +1,9 @@
 {
-  "name": "markdown-mermaid",
-  "version": "1.32.1",
-  "displayName": "Markdown Preview Mermaid Support",
-  "description": "Adds Mermaid diagram and flowchart support to VS Code's builtin markdown preview",
+  "name": "markdown-mermaid-plus",
+  "version": "2.0.0",
+  "displayName": "Markdown Preview Mermaid Support Plus",
+  "description": "Adds Mermaid diagram and flowchart support to VS Code's builtin markdown preview, with SVG/PNG export",
   "icon": "docs/logo.png",
-  "deprecated": true,
   "keywords": [
     "mermaid",
     "markdown",
@@ -15,13 +14,13 @@
     "preview",
     "mermaidjs"
   ],
-  "publisher": "bierner",
+  "publisher": "tuanquynet",
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/mjbvz/vscode-markdown-mermaid.git"
+    "url": "https://github.com/tuanquynet/vscode-markdown-mermaid.git"
   },
   "bugs": {
-    "url": "https://github.com/mjbvz/vscode-markdown-mermaid/issues"
+    "url": "https://github.com/tuanquynet/vscode-markdown-mermaid/issues"
   },
   "engines": {
     "vscode": "^1.100.0"
@@ -38,7 +37,7 @@
     ],
     "notebookRenderer": [
       {
-        "id": "bierner.markdown-it.mermaid-extension",
+        "id": "tuanquynet.markdown-it.mermaid-extension",
         "displayName": "Markdown-It Mermaid renderer",
         "entrypoint": {
           "extends": "vscode.markdown-it-renderer",
@@ -50,7 +49,7 @@
     "configuration": {
       "title": "Markdown Preview Mermaid Support",
       "properties": {
-        "markdown-mermaid.lightModeTheme": {
+        "markdown-mermaid-plus.lightModeTheme": {
           "order": 0,
           "type": "string",
           "enum": [
@@ -63,7 +62,7 @@
           "default": "default",
           "description": "Default Mermaid theme for light mode."
         },
-        "markdown-mermaid.darkModeTheme": {
+        "markdown-mermaid-plus.darkModeTheme": {
           "order": 1,
           "type": "string",
           "enum": [
@@ -76,7 +75,7 @@
           "default": "dark",
           "description": "Default Mermaid theme for dark mode."
         },
-        "markdown-mermaid.languages": {
+        "markdown-mermaid-plus.languages": {
           "order": 2,
           "type": "array",
           "default": [
@@ -84,13 +83,13 @@
           ],
           "description": "Default languages in markdown."
         },
-        "markdown-mermaid.maxTextSize": {
+        "markdown-mermaid-plus.maxTextSize": {
           "order": 3,
           "type": "number",
           "default": 50000,
           "description": "The maximum allowed size of the users text diagram."
         },
-        "markdown-mermaid.mouseNavigation.enabled": {
+        "markdown-mermaid-plus.mouseNavigation.enabled": {
           "type": "string",
           "description": "Controls when mouse-based navigation (panning and zooming) is enabled on mermaid diagrams.",
           "enum": [
@@ -105,7 +104,7 @@
             "Disable mouse navigation"
           ]
         },
-        "markdown-mermaid.controls.show": {
+        "markdown-mermaid-plus.controls.show": {
           "type": "string",
           "description": "Enables/disables showing UI controls on mermaid diagrams.",
           "enum": [
@@ -120,12 +119,12 @@
           ],
           "default": "onHoverOrFocus"
         },
-        "markdown-mermaid.resizable": {
+        "markdown-mermaid-plus.resizable": {
           "type": "boolean",
           "default": true,
           "description": "Allow diagrams to be resized vertically by dragging the bottom edge."
         },
-        "markdown-mermaid.maxHeight": {
+        "markdown-mermaid-plus.maxHeight": {
           "type": "string",
           "default": "",
           "markdownDescription": "Maximum height for diagrams. Can be a number (pixels) or a CSS value like `80vh` or `400px`. Leave empty to try to automatically size diagrams based on their content."
