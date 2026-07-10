@@ -2,13 +2,25 @@
 
 [![](https://vsmarketplacebadges.dev/version/tuanquynet.markdown-mermaid-plus.png)](https://marketplace.visualstudio.com/items?itemName=tuanquynet.markdown-mermaid-plus)
 
-Adds [Mermaid](https://mermaid-js.github.io/mermaid/#/) diagram and flowchart support to VS Code's builtin Markdown preview and to Markdown cells in notebooks, with the ability to export diagrams as SVG or PNG.
+Provides a **dedicated [Mermaid](https://mermaid-js.github.io/mermaid/#/) diagram preview** for Markdown, with pan/zoom, resizing, and the ability to export diagrams as SVG, PNG, or self-contained HTML. Also renders Mermaid in Markdown notebook cells.
 
 This is a maintained fork of [`bierner.markdown-mermaid`](https://github.com/mjbvz/vscode-markdown-mermaid), which was deprecated after being merged into VS Code 1.121.
+
+> [!NOTE]
+> VS Code 1.121+ ships its own Mermaid renderer inside the **built-in** Markdown preview. To avoid two renderers fighting over the same preview (which produces broken/black diagrams), this extension does **not** contribute to the built-in preview. Instead it provides its own preview — see [Opening the preview](#opening-the-preview) below.
 
 ![A mermaid diagram in VS Code's built-in markdown preview](https://github.com/tuanquynet/vscode-markdown-mermaid/raw/master/docs/example.png)
 
 Currently supports Mermaid version 11.12.0.
+
+## Opening the preview
+
+With a Markdown file open, run one of these commands:
+
+- **Markdown Mermaid Plus: Open Preview** — opens the preview in the active column.
+- **Markdown Mermaid Plus: Open Preview to the Side** — opens it beside the editor (also available as the preview icon in the editor title bar).
+
+You can also right-click a `.md` file in the Explorer and choose **Open Preview**. The preview updates live as you edit and follows the current color theme.
 
 ## Usage
 

@@ -2,7 +2,7 @@
   "name": "markdown-mermaid-plus",
   "version": "2.0.0",
   "displayName": "Markdown Preview Mermaid Support Plus",
-  "description": "Adds Mermaid diagram and flowchart support to VS Code's builtin markdown preview, with SVG/PNG export",
+  "description": "A dedicated Mermaid diagram preview for Markdown, with pan/zoom and SVG/PNG/HTML export",
   "icon": "docs/logo.png",
   "keywords": [
     "mermaid",
@@ -32,9 +32,46 @@
     "Other"
   ],
   "contributes": {
-    "markdown.previewScripts": [
-      "./dist-preview/index.bundle.js"
+    "commands": [
+      {
+        "command": "markdown-mermaid-plus.openPreview",
+        "title": "Open Preview",
+        "category": "Markdown Mermaid Plus",
+        "icon": "$(open-preview)"
+      },
+      {
+        "command": "markdown-mermaid-plus.openPreviewToSide",
+        "title": "Open Preview to the Side",
+        "category": "Markdown Mermaid Plus",
+        "icon": "$(open-preview)"
+      }
     ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "markdown-mermaid-plus.openPreview",
+          "when": "editorLangId == markdown"
+        },
+        {
+          "command": "markdown-mermaid-plus.openPreviewToSide",
+          "when": "editorLangId == markdown"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "markdown-mermaid-plus.openPreviewToSide",
+          "when": "editorLangId == markdown",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "markdown-mermaid-plus.openPreview",
+          "when": "resourceLangId == markdown",
+          "group": "navigation"
+        }
+      ]
+    },
     "notebookRenderer": [
       {
         "id": "tuanquynet.markdown-it.mermaid-extension",
@@ -45,7 +82,6 @@
         }
       }
     ],
-    "markdown.markdownItPlugins": true,
     "configuration": {
       "title": "Markdown Preview Mermaid Support",
       "properties": {
@@ -135,7 +171,8 @@
   "dependencies": {
     "@iconify-json/logos": "^1.2.0",
     "@iconify-json/mdi": "^1.2.0",
-    "@mermaid-js/mermaid-zenuml": "^0.2.0"
+    "@mermaid-js/mermaid-zenuml": "^0.2.0",
+    "markdown-it": "^14.3.0"
   },
   "devDependencies": {
     "@mermaid-js/layout-elk": "^0.2.0",

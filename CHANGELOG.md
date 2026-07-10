@@ -3,6 +3,8 @@
 ## 2.0.0 - July 10, 2026
 
 - Forked and republished as **Markdown Preview Mermaid Support Plus** (`tuanquynet.markdown-mermaid-plus`), since the original extension was deprecated after being merged into VS Code.
+- Added a **dedicated Mermaid preview** opened via the `Markdown Mermaid Plus: Open Preview` / `Open Preview to the Side` commands (also in the editor title bar and Explorer context menu). The preview updates live and follows the color theme.
+- **Breaking:** the extension no longer contributes into VS Code's built-in Markdown preview. VS Code 1.121+ ships its own Mermaid renderer there, and two renderers on the same preview produced broken/black diagrams. Use the dedicated preview instead — no need to disable the built-in renderer.
 - Added an **Export** button to the diagram controls with a menu to choose SVG, PNG, or HTML. SVG export inlines computed styles for a standalone file; PNG export rasterizes at 2x with the preview background applied; HTML export produces a self-contained page that re-renders the diagram from its source via an inline script.
 - **Breaking:** settings are now under the `markdown-mermaid-plus.*` namespace (previously `markdown-mermaid.*`). Existing settings need to be re-applied.
 
