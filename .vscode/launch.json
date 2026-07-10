@@ -1,34 +1,34 @@
 // A launch configuration that compiles the extension and then opens it inside a new window
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Launch Extension",
-            "type": "extensionHost",
-            "request": "launch",
-            "runtimeExecutable": "${execPath}",
-            "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}",
-                "${workspaceFolder}/test-workspace"
-            ],
-            "outFiles": [
-                "${workspaceFolder}/dist/**/*.js"
-            ],
-            "preLaunchTask": "npm: compile-ext",
-            "sourceMaps": true
-        },
-        {
-            "name": "Run Web Extension in VS Code",
-            "type": "extensionHost",
-            "debugWebWorkerHost": true,
-            "request": "launch",
-            "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}",
-                "--extensionDevelopmentKind=web"
-            ],
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ]
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--disable-extensions",
+        "--disable-extension=vscode.mermaid-markdown-features",
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "${workspaceFolder}/test-workspace"
+      ],
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "preLaunchTask": "npm: compile-ext",
+      "sourceMaps": true
+    },
+    {
+      "name": "Run Web Extension in VS Code",
+      "type": "extensionHost",
+      "debugWebWorkerHost": true,
+      "request": "launch",
+      "args": [
+        "--disable-extensions",
+        "--disable-extension=vscode.mermaid-markdown-features",
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionDevelopmentKind=web"
+      ],
+      "outFiles": ["${workspaceFolder}/**/*.js"]
+    }
+  ]
 }

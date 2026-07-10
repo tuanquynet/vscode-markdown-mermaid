@@ -1,5 +1,7 @@
 .vscode/**
 .vscode-test/**
+.playwright-mcp/**
+*.vsix
 out/test/**
 build/
 markdownPreview/

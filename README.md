@@ -1,21 +1,32 @@
-> [!WARNING]
-> This extension is deprecated as it has been [merged into VS Code 1.121](https://code.visualstudio.com/updates/v1_121#_mermaid-diagrams-in-markdown-preview-and-notebooks).
+# Markdown Preview Mermaid Support Plus
 
-# Markdown Preview Mermaid Support
+[![](https://vsmarketplacebadges.dev/version/tuanquynet.markdown-mermaid-plus.png)](https://marketplace.visualstudio.com/items?itemName=tuanquynet.markdown-mermaid-plus)
 
-[![](https://vsmarketplacebadges.dev/version/bierner.markdown-mermaid.png)](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
+Provides a **dedicated [Mermaid](https://mermaid-js.github.io/mermaid/#/) diagram preview** for Markdown, with pan/zoom, resizing, and the ability to export diagrams as SVG, PNG, or self-contained HTML. Also renders Mermaid in Markdown notebook cells.
 
-Adds [Mermaid](https://mermaid-js.github.io/mermaid/#/) diagram and flowchart support to VS Code's builtin Markdown preview and to Markdown cells in notebooks.
+This is a maintained fork of [`bierner.markdown-mermaid`](https://github.com/mjbvz/vscode-markdown-mermaid), which was deprecated after being merged into VS Code 1.121.
 
-![A mermaid diagram in VS Code's built-in markdown preview](https://github.com/mjbvz/vscode-markdown-mermaid/raw/master/docs/example.png)
+> [!NOTE]
+> VS Code 1.121+ ships its own Mermaid renderer inside the **built-in** Markdown preview. To avoid two renderers fighting over the same preview (which produces broken/black diagrams), this extension does **not** contribute to the built-in preview. Instead it provides its own preview — see [Opening the preview](#opening-the-preview) below.
+
+![A mermaid diagram in VS Code's built-in markdown preview](https://github.com/tuanquynet/vscode-markdown-mermaid/raw/master/docs/example.png)
 
 Currently supports Mermaid version 11.12.0.
+
+## Opening the preview
+
+With a Markdown file open, run one of these commands:
+
+- **Markdown Mermaid Plus: Open Preview** — opens the preview in the active column.
+- **Markdown Mermaid Plus: Open Preview to the Side** — opens it beside the editor (also available as the preview icon in the editor title bar).
+
+You can also right-click a `.md` file in the Explorer and choose **Open Preview**. The preview updates live as you edit and follows the current color theme.
 
 ## Usage
 
 Create diagrams in markdown using `mermaid` fenced code blocks:
 
-~~~markdown
+````markdown
 ```mermaid
 graph TD;
     A-->B;
@@ -23,23 +34,23 @@ graph TD;
     B-->D;
     C-->D;
 ```
-~~~
+````
 
 You can also use `:::` blocks:
 
 ```markdown
 ::: mermaid
 graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+A-->B;
+A-->C;
+B-->D;
+C-->D;
 :::
 ```
 
 Supports [MDI](https://icon-sets.iconify.design/mdi/) and [logos](https://icon-sets.iconify.design/logos/) icons from Iconify:
 
-~~~markdown
+````markdown
 ```mermaid
 architecture-beta
     service user(mdi:account)
@@ -47,14 +58,14 @@ architecture-beta
 
     user:R --> L:lambda
 ```
-~~~
-
+````
 
 ## Navigating Diagrams
 
 Mermaid diagrams support panning and zooming to help explore large or complex diagrams. By default, navigation controls appear when you hover over or focus on a diagram. You can also navigate diagrams using the mouse:
 
 ### Zooming
+
 To zoom in and out of diagrams:
 
 - **Zoom controls** — Use the `+` and `-` buttons that appear in the navigation controls
@@ -65,26 +76,38 @@ To zoom in and out of diagrams:
 To reset the zoom level and position, click the `reset` button in the controls.
 
 ### Panning
+
 To pan around a diagram:
 
 - **Click and drag** — Hold <kbd>alt</kbd> (<kbd>option</kbd> on Mac) and click and drag to pan
 - **Pan mode** — Click the `pan mode` button in the navigation controls to enable click-and-drag panning without holding <kbd>alt</kbd>. Click it again to turn off `pan mode`.
 
-By default, click-and-drag panning requires holding the <kbd>alt</kbd> key to prevent accidental panning. Use `markdown-mermaid.mouseNavigation.enabled` to change this:
+By default, click-and-drag panning requires holding the <kbd>alt</kbd> key to prevent accidental panning. Use `markdown-mermaid-plus.mouseNavigation.enabled` to change this:
 
 - `always` — Click and drag always pans (no modifier key needed)
 - `alt` — Click and drag only pans when holding <kbd>alt</kbd> (default)
 - `never` — Disable mouse-based panning (controls and pinch-to-zoom still work)
 
 ### Resizing
-Diagrams can be resized vertically by dragging the bottom edge. This is most useful if you use the `markdown-mermaid.maxHeight` setting or use css to limit the diagram's natural size.
 
-Use `markdown-mermaid.resizable` to disable this behavior, or `markdown-mermaid.maxHeight` to set a maximum height.
+Diagrams can be resized vertically by dragging the bottom edge. This is most useful if you use the `markdown-mermaid-plus.maxHeight` setting or use css to limit the diagram's natural size.
 
+Use `markdown-mermaid-plus.resizable` to disable this behavior, or `markdown-mermaid-plus.maxHeight` to set a maximum height.
+
+## Exporting Diagrams
+
+Each diagram's navigation controls include an **Export** button. Click it to open a menu and choose a format:
+
+- **SVG** — Downloads the diagram as a standalone `.svg` file. Computed styles are inlined so the file renders correctly outside of VS Code.
+- **PNG** — Downloads the diagram as a `.png` file, rasterized at 2x resolution with the preview's background color applied so themed diagrams stay readable.
+- **HTML** — Downloads a self-contained `.html` file that re-renders the diagram from its Mermaid source using an inline script (Mermaid is loaded from a CDN). Useful for embedding a live diagram in a web page.
+
+Files are named after the diagram's content hash (for example `mermaid-766cf408.svg`).
 
 ## Configuration
 
-### `markdown-mermaid.lightModeTheme`
+### `markdown-mermaid-plus.lightModeTheme`
+
 Configures the Mermaid theme used when VS Code is using a light color theme. Supported values:
 
 - `base`
@@ -95,7 +118,8 @@ Configures the Mermaid theme used when VS Code is using a light color theme. Sup
 
 Currently not supported in notebooks.
 
-### `markdown-mermaid.darkModeTheme`
+### `markdown-mermaid-plus.darkModeTheme`
+
 Configures the Mermaid theme used when VS Code is using a dark color theme. Supported values:
 
 - `base`
@@ -106,17 +130,19 @@ Configures the Mermaid theme used when VS Code is using a dark color theme. Supp
 
 Currently not supported in notebooks.
 
-### `markdown-mermaid.languages`
+### `markdown-mermaid-plus.languages`
+
 Configures language ids used to identify Mermaid code blocks in markdown. The default is `["mermaid"]`.
 
-### `markdown-mermaid.mouseNavigation.enabled`
+### `markdown-mermaid-plus.mouseNavigation.enabled`
+
 Controls when mouse-based navigation (panning and zooming) is enabled. The default is `alt`. Supported values:
 
 - `always` — Always enable mouse navigation on mermaid diagrams
 - `alt` — Only enable mouse navigation when holding down <kbd>alt</kbd> (<kbd>option</kbd> on Mac)
 - `never` — Disable mouse navigation
 
-### `markdown-mermaid.controls.show`
+### `markdown-mermaid-plus.controls.show`
 
 When to show navigation control buttons. The default is `onHoverOrFocus`. Supported values:
 
@@ -124,23 +150,24 @@ When to show navigation control buttons. The default is `onHoverOrFocus`. Suppor
 - `onHoverOrFocus` — Show navigation controls when hovering over or focusing on a diagram
 - `always` — Always show navigation controls
 
-### `markdown-mermaid.resizable`
+### `markdown-mermaid-plus.resizable`
+
 Allow diagrams to be resized vertically by dragging the bottom edge. The default is `true`.
 
 When enabled, you can drag the bottom edge of any diagram to adjust its height. The custom height is preserved as long as the diagram content doesn't change.
 
-### `markdown-mermaid.maxHeight`
+### `markdown-mermaid-plus.maxHeight`
+
 Maximum height for diagrams. Can be a number (pixels) or a CSS value like `80vh` or `400px`. Leave empty for no limit. The default is empty (no limit).
 
 Examples:
+
 - `400` — 400 pixels.
 - `80vh` — 80% of the viewport (markdown-preview) height.
 
-
-### `markdown-mermaid.maxTextSize`
+### `markdown-mermaid-plus.maxTextSize`
 
 Maximum allowed size of diagram text. The default is `50000`.
-
 
 ## Using custom CSS in the Markdown Preview
 
@@ -156,9 +183,9 @@ For example, add Font Awesome like this:
 
 Use it like this:
 
-~~~markdown
+````markdown
 ```mermaid
 graph LR
     fa:fa-check-->fa:fa-coffee
 ```
-~~~
+````

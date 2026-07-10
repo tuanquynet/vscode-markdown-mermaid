@@ -1,0 +1,167 @@
+/**
+ * Exports rendered mermaid diagrams as standalone SVG or PNG images,
+ * or as self-contained HTML that re-renders the diagram from its source.
+ */
+
+const pngScale = 2;
+
+// Pinned to the major version this extension bundles, so the embed keeps working.
+const mermaidCdnUrl =
+  "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+interface SvgExport {
+  readonly source: string;
+  readonly width: number;
+  readonly height: number;
+}
+
+/**
+ * Serializes the rendered SVG into a standalone SVG document.
+ *
+ * The in-preview SVG relies on the webview's environment (CSS variables, responsive sizing),
+ * so the clone gets explicit dimensions and resolved variable values.
+ */
+function serializeSvg(svg: SVGSVGElement): SvgExport {
+  const rect = svg.getBoundingClientRect();
+  const viewBox = svg.viewBox.baseVal;
+  const width = viewBox?.width || rect.width;
+  const height = viewBox?.height || rect.height;
+
+  const clone = svg.cloneNode(true) as SVGSVGElement;
+  clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+  clone.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+  clone.setAttribute("width", String(width));
+  clone.setAttribute("height", String(height));
+  clone.style.maxWidth = "";
+
+  let source = new XMLSerializer().serializeToString(clone);
+  source = resolveCssVariables(source, svg);
+
+  return { source, width, height };
+}
+
+/**
+ * Replaces `var(--name, fallback)` references with their computed values so the
+ * exported image looks the same outside of the webview.
+ */
+function resolveCssVariables(source: string, context: Element): string {
+  const computed = window.getComputedStyle(context);
+  return source.replace(
+    /var\((--[\w-]+)(?:\s*,\s*([^)]+))?\)/g,
+    (match, name: string, fallback: string | undefined) => {
+      const value = computed.getPropertyValue(name).trim();
+      return value || fallback?.trim() || match;
+    },
+  );
+}
+
+function downloadFile(href: string, filename: string): void {
+  const link = document.createElement("a");
+  link.href = href;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+export function exportDiagramAsSvg(
+  svg: SVGSVGElement,
+  baseFilename: string,
+): void {
+  const { source } = serializeSvg(svg);
+  const href = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(source)}`;
+  downloadFile(href, `${baseFilename}.svg`);
+}
+
+export async function exportDiagramAsPng(
+  svg: SVGSVGElement,
+  baseFilename: string,
+): Promise<void> {
+  const { source, width, height } = serializeSvg(svg);
+
+  const image = new Image();
+  image.decoding = "sync";
+  const loaded = new Promise<void>((resolve, reject) => {
+    image.onload = () => resolve();
+    image.onerror = () =>
+      reject(new Error("Failed to load SVG for PNG export"));
+  });
+  image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(source)}`;
+  await loaded;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(width * pngScale));
+  canvas.height = Math.max(1, Math.round(height * pngScale));
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("Could not create canvas context for PNG export");
+  }
+
+  // Use the preview's background so themed (e.g. dark mode) diagrams stay readable
+  const background = window.getComputedStyle(document.body).backgroundColor;
+  if (background && background !== "rgba(0, 0, 0, 0)") {
+    ctx.fillStyle = background;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+  downloadFile(canvas.toDataURL("image/png"), `${baseFilename}.png`);
+}
+
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/**
+ * Builds a self-contained HTML document that re-renders the diagram from its
+ * Mermaid source using an inline module script. Mermaid itself is loaded from a
+ * CDN (the library is far too large to inline).
+ */
+export function buildEmbedHtml(source: string): string {
+  const isDark =
+    document.body.classList.contains("vscode-dark") ||
+    document.body.classList.contains("vscode-high-contrast");
+  const theme = isDark ? "dark" : "default";
+  const background = isDark ? "#1e1e1e" : "#ffffff";
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mermaid Diagram</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 16px;
+            background: ${background};
+            display: flex;
+            justify-content: center;
+        }
+        .mermaid {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <pre class="mermaid">
+${escapeHtml(source)}
+    </pre>
+    <script type="module">
+        import mermaid from '${mermaidCdnUrl}';
+        mermaid.initialize({ startOnLoad: true, theme: '${theme}' });
+    </script>
+</body>
+</html>
+`;
+}
+
+export function exportDiagramAsHtml(
+  source: string,
+  baseFilename: string,
+): void {
+  const html = buildEmbedHtml(source);
+  const href = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
+  downloadFile(href, `${baseFilename}.html`);
+}
