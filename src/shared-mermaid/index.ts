@@ -30,6 +30,9 @@ function renderMermaidElement(
   mermaidContainer.id = containerId;
   mermaidContainer.innerHTML = "";
 
+  // Preserve the original source so it can be re-exported (e.g. as embeddable HTML)
+  mermaidContainer.dataset.mermaidSource = source;
+
   return {
     containerId,
     contentHash,

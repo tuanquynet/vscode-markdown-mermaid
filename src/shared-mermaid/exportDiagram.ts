@@ -1,8 +1,13 @@
 /**
- * Exports rendered mermaid diagrams as standalone SVG or PNG images.
+ * Exports rendered mermaid diagrams as standalone SVG or PNG images,
+ * or as self-contained HTML that re-renders the diagram from its source.
  */
 
 const pngScale = 2;
+
+// Pinned to the major version this extension bundles, so the embed keeps working.
+const mermaidCdnUrl =
+  "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
 
 interface SvgExport {
   readonly source: string;
@@ -102,4 +107,61 @@ export async function exportDiagramAsPng(
 
   ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
   downloadFile(canvas.toDataURL("image/png"), `${baseFilename}.png`);
+}
+
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/**
+ * Builds a self-contained HTML document that re-renders the diagram from its
+ * Mermaid source using an inline module script. Mermaid itself is loaded from a
+ * CDN (the library is far too large to inline).
+ */
+export function buildEmbedHtml(source: string): string {
+  const isDark =
+    document.body.classList.contains("vscode-dark") ||
+    document.body.classList.contains("vscode-high-contrast");
+  const theme = isDark ? "dark" : "default";
+  const background = isDark ? "#1e1e1e" : "#ffffff";
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mermaid Diagram</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 16px;
+            background: ${background};
+            display: flex;
+            justify-content: center;
+        }
+        .mermaid {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <pre class="mermaid">
+${escapeHtml(source)}
+    </pre>
+    <script type="module">
+        import mermaid from '${mermaidCdnUrl}';
+        mermaid.initialize({ startOnLoad: true, theme: '${theme}' });
+    </script>
+</body>
+</html>
+`;
+}
+
+export function exportDiagramAsHtml(
+  source: string,
+  baseFilename: string,
+): void {
+  const html = buildEmbedHtml(source);
+  const href = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
+  downloadFile(href, `${baseFilename}.html`);
 }

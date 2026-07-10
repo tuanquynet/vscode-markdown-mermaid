@@ -5,7 +5,11 @@ import {
 } from "./config";
 import diagramStyles from "./diagramStyles.css";
 import { IDisposable } from "./disposable";
-import { exportDiagramAsPng, exportDiagramAsSvg } from "./exportDiagram";
+import {
+  exportDiagramAsHtml,
+  exportDiagramAsPng,
+  exportDiagramAsSvg,
+} from "./exportDiagram";
 
 const minScale = 0.5;
 const maxScale = 10;
@@ -296,6 +300,7 @@ export class DiagramElement {
                 <div class="export-menu" role="menu" hidden>
                     <button class="export-menu-item export-svg-btn" role="menuitem">SVG</button>
                     <button class="export-menu-item export-png-btn" role="menuitem">PNG</button>
+                    <button class="export-menu-item export-html-btn" role="menuitem">HTML</button>
                 </div>
             </div>
         `;
@@ -368,6 +373,16 @@ export class DiagramElement {
       },
       { signal },
     );
+    controls.querySelector(".export-html-btn")?.addEventListener(
+      "click",
+      (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.closeExportMenu();
+        this.exportAsHtml();
+      },
+      { signal },
+    );
 
     // Dismiss the menu when clicking elsewhere or pressing Escape
     document.addEventListener("click", () => this.closeExportMenu(), {
@@ -428,6 +443,25 @@ export class DiagramElement {
     } catch (error) {
       console.error("Failed to export diagram as PNG", error);
     }
+  }
+
+  public exportAsHtml(): void {
+    const source = this.getSource();
+    if (!source) {
+      console.error("Failed to export diagram as HTML: source not available");
+      return;
+    }
+    try {
+      exportDiagramAsHtml(source, this.id);
+    } catch (error) {
+      console.error("Failed to export diagram as HTML", error);
+    }
+  }
+
+  /** The diagram's original Mermaid source, stashed on the container during render. */
+  private getSource(): string | undefined {
+    const container = this.content.querySelector<HTMLElement>(".mermaid");
+    return container?.dataset.mermaidSource;
   }
 
   private createResizeHandle(): HTMLElement {

@@ -86,8 +86,9 @@ Use `markdown-mermaid-plus.resizable` to disable this behavior, or `markdown-mer
 
 Each diagram's navigation controls include an **Export** button. Click it to open a menu and choose a format:
 
-- **Export as SVG** — Downloads the diagram as a standalone `.svg` file. Computed styles are inlined so the file renders correctly outside of VS Code.
-- **Export as PNG** — Downloads the diagram as a `.png` file, rasterized at 2x resolution with the preview's background color applied so themed diagrams stay readable.
+- **SVG** — Downloads the diagram as a standalone `.svg` file. Computed styles are inlined so the file renders correctly outside of VS Code.
+- **PNG** — Downloads the diagram as a `.png` file, rasterized at 2x resolution with the preview's background color applied so themed diagrams stay readable.
+- **HTML** — Downloads a self-contained `.html` file that re-renders the diagram from its Mermaid source using an inline script (Mermaid is loaded from a CDN). Useful for embedding a live diagram in a web page.
 
 Files are named after the diagram's content hash (for example `mermaid-766cf408.svg`).
 

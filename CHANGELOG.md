@@ -3,7 +3,7 @@
 ## 2.0.0 - July 10, 2026
 
 - Forked and republished as **Markdown Preview Mermaid Support Plus** (`tuanquynet.markdown-mermaid-plus`), since the original extension was deprecated after being merged into VS Code.
-- Added an **Export** button to the diagram controls with a menu to choose SVG or PNG. SVG export inlines computed styles for a standalone file; PNG export rasterizes at 2x with the preview background applied.
+- Added an **Export** button to the diagram controls with a menu to choose SVG, PNG, or HTML. SVG export inlines computed styles for a standalone file; PNG export rasterizes at 2x with the preview background applied; HTML export produces a self-contained page that re-renders the diagram from its source via an inline script.
 - **Breaking:** settings are now under the `markdown-mermaid-plus.*` namespace (previously `markdown-mermaid.*`). Existing settings need to be re-applied.
 
 ## 1.32.1 - May 20, 2026
